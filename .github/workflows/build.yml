@@ -6,7 +6,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: unzip -q ZayVideoEditor.zip
+      - run: unzip -qo "$(ls -v ZayVideoEditor*.zip | tail -1)"
       - uses: actions/setup-java@v4
         with:
           distribution: temurin

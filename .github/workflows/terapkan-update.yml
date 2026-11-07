@@ -10,7 +10,8 @@ jobs:
       - name: Terapkan zip
         run: |
           set -e
-          ZIP=ZAY-Sapphire-Platinum-7Nov.zip
+          ZIP=$(ls -t ZAY-Sapphire-Platinum-7Nov*.zip | head -n 1)
+          echo "Memakai: $ZIP"
           rm -rf /tmp/upd && mkdir /tmp/upd
           unzip -q "$ZIP" -d /tmp/upd
           ROOT=$(dirname "$(find . -maxdepth 3 -name settings.gradle.kts -not -path './.git/*' | head -n 1)")
@@ -18,7 +19,7 @@ jobs:
           rm -f "$ROOT/app/src/main/res/drawable/ic_launcher_foreground.xml"
           rm -f "$ROOT/app/src/main/res/drawable/ic_launcher_background.xml"
           rsync -a --exclude '.github' --exclude '.git' /tmp/upd/ZayVideoEditor/ "$ROOT"/
-          rm -f "$ZIP"
+          rm -f ZAY-Sapphire-Platinum-7Nov*.zip
           git config user.name "github-actions"
           git config user.email "actions@github.com"
           git add -A

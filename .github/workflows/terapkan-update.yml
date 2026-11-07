@@ -1,0 +1,26 @@
+name: Terapkan Update ZIP
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Terapkan zip
+        run: |
+          set -e
+          ZIP=ZAY-Sapphire-Platinum-7Nov.zip
+          rm -rf /tmp/upd && mkdir /tmp/upd
+          unzip -q "$ZIP" -d /tmp/upd
+          ROOT=$(dirname "$(find . -maxdepth 3 -name settings.gradle.kts -not -path './.git/*' | head -n 1)")
+          echo "Root proyek: $ROOT"
+          rm -f "$ROOT/app/src/main/res/drawable/ic_launcher_foreground.xml"
+          rm -f "$ROOT/app/src/main/res/drawable/ic_launcher_background.xml"
+          rsync -a --exclude '.github' --exclude '.git' /tmp/upd/ZayVideoEditor/ "$ROOT"/
+          rm -f "$ZIP"
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add -A
+          git commit -m "Terapkan update Sapphire Platinum" || echo "tidak ada perubahan"
+          git push
